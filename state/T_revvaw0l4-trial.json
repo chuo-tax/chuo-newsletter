@@ -1,9 +1,12 @@
 {
   "video_id": "T_revvaw0l4-trial",
-  "status": "drafting",
+  "status": "skipped",
   "title": "【今すぐ確認！】2026年12月以降の年金制度は、企業型DCとはぐくみ基金のどっちを選ぶべき？10年・20年後の手取りを徹底比較！",
   "subject": "【企業型DCvsはぐくみ基金】20年後に手取りが逆転",
   "html": "issues/20261118-T_revvaw0l4-trial.html",
   "note": "試運転",
-  "updated_at": "2026-11-18T17:35:06+09:00"
+  "updated_at": "2026-11-18T17:36:36+09:00",
+  "test_campaign": "3z112b8642f26223597c6d785e2df71df514d132e83ede1f99be0990db183504b5",
+  "preview": "https://ksyn-zcmp.campaign-view.jp/campaigns/SharedCampaignPreview.zc?c=html&cDgs=3zc44dc62fa45d3c4ebf6d5d822b539d0dd4d1ccd205db6a6b36b527d4e5062295",
+  "campaign_name": "20261118_退職金制度の選び方（試運転）"
 }
