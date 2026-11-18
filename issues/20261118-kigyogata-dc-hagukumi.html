@@ -2,7 +2,12 @@
 <html lang="ja"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>中央会計社通信</title></head>
+<title>中央会計社通信</title>
+<style>
+/* ZOHOが自動で付ける上下の帯（幅600px固定）を、画面の幅に合わせて縮める。スマホでは上の帯を隠す */
+.tmplheader, .tmplfooter { width: 100% !important; max-width: 600px !important; }
+@media only screen and (max-width: 620px) { .tmplheader { display: none !important; } }
+</style></head>
 <body style="margin:0;padding:0;background:#eeeeee;">
 <!-- プリヘッダー（受信一覧で件名の横に出る文。本文には表示されない） -->
 <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">積立時の節税効果と、最終的な手取り額は別物です。10年・20年で比べました。</div>
