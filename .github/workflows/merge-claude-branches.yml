@@ -1,8 +1,10 @@
-# クラウドの Claude が claude/… ブランチに push した issues/ state/ assets/ を、main（GitHub Pages）に取り込む
+# クラウドの Claude が claude/… ブランチに push した issues/ state/ assets/ を、main（GitHub Pages）に取り込む。
+# あわせて、issues/ の HTML が使っている動画のサムネイル（assets/thumbs/<動画ID>.jpg）がなければ、YouTube から取ってくる。
 name: merge-claude-branches
 on:
   push:
-    branches: ['claude/**']
+    branches: ['claude/**', 'main']
+  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -17,14 +19,28 @@ jobs:
           ref: main
           fetch-depth: 0
       - name: Copy issues/state/assets from the pushed branch into main
+        if: startsWith(github.ref, 'refs/heads/claude/')
         run: |
-          git config user.name "chuo-tax"
-          git config user.email "info@chuo-tax.jp"
           BR="${GITHUB_REF#refs/heads/}"
           git fetch origin "$BR"
           for d in issues state assets; do
             if git cat-file -e "origin/$BR:$d" 2>/dev/null; then git checkout "origin/$BR" -- "$d"; fi
           done
+      - name: Fetch missing video thumbnails
+        run: |
+          mkdir -p assets/thumbs
+          for id in $(grep -rhoE 'assets/thumbs/[A-Za-z0-9_-]+\.jpg' issues | sed -E 's#.*/([A-Za-z0-9_-]+)\.jpg#\1#' | sort -u); do
+            f="assets/thumbs/$id.jpg"
+            [ -s "$f" ] && continue
+            for q in maxresdefault sddefault hqdefault; do
+              if curl -sfL -o "$f" "https://i.ytimg.com/vi/$id/$q.jpg" && [ "$(stat -c%s "$f")" -gt 5000 ]; then echo "got $id ($q)"; break; fi
+              rm -f "$f"
+            done
+          done
+      - name: Commit and push to main
+        run: |
+          git config user.name "chuo-tax"
+          git config user.email "info@chuo-tax.jp"
           git add -A issues state assets || true
-          if git diff --cached --quiet; then echo "変更なし"; else git commit -m "取り込み: $BR"; git push origin main; fi
-          git push origin --delete "$BR" || true
+          if git diff --cached --quiet; then echo "変更なし"; else git commit -m "取り込み: ${GITHUB_REF#refs/heads/}"; git push origin main; fi
+          case "$GITHUB_REF" in refs/heads/claude/*) git push origin --delete "${GITHUB_REF#refs/heads/}" || true;; esac
